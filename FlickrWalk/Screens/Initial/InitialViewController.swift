@@ -18,7 +18,7 @@ protocol InitialViewProtocol: AnyObject {
 
 final class InitialViewController: UIViewController {
 
-    lazy var startButton: UIButton = UIButton(
+    private lazy var startButton: UIButton = UIButton(
         title: "",
         titleColor: .black,
         font: .boldSystemFont(ofSize: 20),

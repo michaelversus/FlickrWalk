@@ -42,7 +42,6 @@ class RegionMonitoringLocationManagerTests: XCTestCase {
         // Then
         XCTAssertEqual(locationManager.actions, [.requestAlwaysAuthorization])
         XCTAssertTrue(sut.isAuthorized())
-        XCTAssertEqual(currentAccuracy, .fullAccuracy)
     }
 
     func test_start_success() {

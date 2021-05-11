@@ -16,7 +16,6 @@ protocol PhotosViewProtocol: AnyObject {
 
 final class PhotosViewController: UIViewController {
     private let presenter: PhotosPresenterProtocol
-
     private let listView: ListView = ListView()
 
     private lazy var stopButton: UIBarButtonItem = {
@@ -24,7 +23,7 @@ final class PhotosViewController: UIViewController {
         return button
     }()
 
-    @objc private func handleStopButtonTapped() {
+    @objc func handleStopButtonTapped() {
         presenter.stopUpdates()
         navigationController?.popViewController(animated: true)
     }

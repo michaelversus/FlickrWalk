@@ -9,9 +9,11 @@ import UIKit
 
 public struct PhotoCellUIModel {
     let image: UIImage
+    let id: String
 
-    public init(image: UIImage) {
+    public init(image: UIImage, id: String) {
         self.image = image
+        self.id = id
     }
 }
 
@@ -21,4 +23,8 @@ extension PhotoCellUIModel {
     }
 }
 
-extension PhotoCellUIModel: Equatable {}
+extension PhotoCellUIModel: Equatable {
+    public static func == (lhs: PhotoCellUIModel, rhs: PhotoCellUIModel) -> Bool {
+        return  lhs.id == rhs.id
+    }
+}

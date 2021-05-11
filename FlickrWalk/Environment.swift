@@ -12,6 +12,9 @@ import CommonUtils
 
 protocol EnvironmentProtocol {
     var locationManager: LocationManagerProtocol { get }
+    var urlSession: URLSessionProtocol { get }
+    var fileManager: FileManagerProtocol { get }
+    var mainQueue: DispatchQueueProtocol { get }
 }
 
 /// A Structure that encapsulates all environment & user specific singletons and classes.
@@ -19,6 +22,7 @@ final class Environment: EnvironmentProtocol {
     let locationManager: LocationManagerProtocol
     let urlSession: URLSessionProtocol
     let fileManager: FileManagerProtocol
+    let mainQueue: DispatchQueueProtocol
 
     /// Returns the current environment.
     static let current: Environment = Environment()
@@ -27,10 +31,24 @@ final class Environment: EnvironmentProtocol {
     private init(
         locationManager: LocationManagerProtocol = RegionMonitoringLocationManager(radius: 100),
         urlSession: URLSessionProtocol = URLSession.shared,
-        fileManager: FileManagerProtocol = FileManager.default
+        fileManager: FileManagerProtocol = FileManager.default,
+        mainQueue: DispatchQueueProtocol = DispatchQueue.main
     ) {
         self.locationManager = locationManager
         self.urlSession = urlSession
         self.fileManager = fileManager
+        self.mainQueue = mainQueue
+    }
+}
+
+protocol DispatchQueueProtocol {
+    func executeAsync(_ work: @escaping () -> Void)
+}
+
+extension DispatchQueue: DispatchQueueProtocol {
+    func executeAsync(_ work: @escaping () -> Void) {
+        self.async {
+            work()
+        }
     }
 }

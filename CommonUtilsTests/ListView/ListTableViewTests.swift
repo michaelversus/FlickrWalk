@@ -16,7 +16,7 @@ class ListTableViewTests: XCTestCase {
             .photoCellMock,
             .photoCellMock
         ]
-        let reuseIdentifier = "id1"
+        let reuseIdentifier = "photoCell"
         let descriptor: (CellItem) -> CellDescriptor = { $0.cellDescriptor }
 
         // When
@@ -33,8 +33,8 @@ class ListTableViewTests: XCTestCase {
 
 extension CellItem {
     static let photoCellMock: CellItem = {
-        let image = UIImage(named: "pencil")!
-        let uiModel = PhotoCellUIModel(image: image)
+        let image = UIImage(systemName: "pencil")!
+        let uiModel = PhotoCellUIModel(image: image, id: "id")
         let item = CellItem.photoCell(uiModel)
         return item
     }()

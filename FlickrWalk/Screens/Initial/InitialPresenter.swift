@@ -18,10 +18,13 @@ protocol InitialPresenterProtocol {
 final class InitialPresenter: InitialPresenterProtocol {
     weak private var view: InitialViewProtocol?
     private let locationManager: LocationManagerProtocol
+    private let mainQueue: DispatchQueueProtocol
 
     init(
-        locationManager: LocationManagerProtocol = Environment.current.locationManager
+        locationManager: LocationManagerProtocol = Environment.current.locationManager,
+        mainQueue: DispatchQueueProtocol = Environment.current.mainQueue
     ) {
+        self.mainQueue = mainQueue
         self.locationManager = locationManager
         self.locationManager.didChangeAuthorization = { [weak self] accuracy, status in
             self?.didChangeAuthorization(accuracy: accuracy, status: status)
@@ -45,14 +48,14 @@ final class InitialPresenter: InitialPresenterProtocol {
         if !self.locationManager.isAuthorized() {
             self.locationManager.requestAlwaysAuthorization()
         } else {
-            DispatchQueue.main.async { [weak self] in
+            mainQueue.executeAsync { [weak self] in
                 self?.view?.goToPhotos()
             }
         }
     }
 
     func didChangeAuthorization(accuracy: CLAccuracyAuthorization, status: CLAuthorizationStatus) {
-        DispatchQueue.main.async { [weak self] in
+        mainQueue.executeAsync { [weak self] in
             guard status == .authorizedAlways || status == .authorizedWhenInUse else {
                 self?.view?.presentAlert(with: "Caution", message: "The app needs authorization for your location to work as expected")
                 return
@@ -66,7 +69,7 @@ final class InitialPresenter: InitialPresenterProtocol {
     }
 
     func didFailWithError(error: Error) {
-        DispatchQueue.main.async { [weak self] in
+        mainQueue.executeAsync { [weak self] in
             self?.view?.presentAlert(with: "Caution", message: "Something went wrong")
         }
     }

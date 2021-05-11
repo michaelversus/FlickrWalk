@@ -9,7 +9,7 @@ import UIKit
 
 final public  class PhotoCell: UITableViewCell {
 
-    let photoView: UIImageView = {
+    public let photoView: UIImageView = {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
