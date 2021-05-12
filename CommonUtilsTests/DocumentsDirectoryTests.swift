@@ -36,4 +36,16 @@ class DocumentsDirectoryTests: XCTestCase {
         XCTAssertThrowsError(try sut.loadJPG(filename: fakeFilename))
     }
 
+    func test_save_clearAll() throws {
+        // Given
+        let testImage: UIImage = try XCTUnwrap(UIImage(systemName: "pencil"))
+
+        // When
+        try sut.saveJPG(image: testImage, filename: "testImage.jpg")
+        try sut.clearAllImages()
+
+        // Then
+        XCTAssertThrowsError(try sut.loadJPG(filename: "testImage.jpg"))
+    }
+
 }

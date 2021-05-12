@@ -65,6 +65,7 @@ final class PhotosPresenter: PhotosPresenterProtocol {
 
     func stopUpdates() {
         locationManager.stop()
+        try? fileManager.clearAllImages()
     }
 
     func didUpdateCurrentLocation(location: CLLocation) {

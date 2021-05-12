@@ -70,6 +70,8 @@ class PhotosPresenterTests: XCTestCase {
         let expectedLocationActions: [MockLocationManager.Action] = [
             .stop
         ]
+        XCTAssertNil(fileManager.image)
+        XCTAssertNil(fileManager.filename)
         XCTAssertEqual(locationManager.actions, expectedLocationActions)
     }
 

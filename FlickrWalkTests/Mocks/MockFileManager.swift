@@ -10,8 +10,8 @@ import CommonUtils
 @testable import FlickrWalk
 
 final class MockFileManager: FileManagerProtocol {
-    var image: UIImage
-    var filename: String
+    var image: UIImage?
+    var filename: String?
     var error: Error?
 
     public init(image: UIImage, filename: String, error: Error?) {
@@ -32,10 +32,18 @@ final class MockFileManager: FileManagerProtocol {
         if let error = error {
             throw error
         }
-        if filename == self.filename {
-            return self.image
+        if filename == self.filename, let image = self.image {
+            return image
         }
         throw MockFileManagerError()
+    }
+
+    func clearAllImages() throws {
+        if let error = error {
+            throw error
+        }
+        self.image = nil
+        self.filename = nil
     }
 }
 

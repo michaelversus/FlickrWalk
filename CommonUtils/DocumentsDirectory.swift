@@ -16,6 +16,8 @@ public protocol FileManagerProtocol {
     func loadJPG(
         filename: String
     ) throws -> UIImage
+
+    func clearAllImages() throws
 }
 
 extension FileManager: FileManagerProtocol {
@@ -24,6 +26,7 @@ extension FileManager: FileManagerProtocol {
         case failedJpegData
         case failedToLoadData
         case invalidImageData
+        case unknownPath
     }
 
     private func url(directory: FileManager.SearchPathDirectory) -> URL? {
@@ -35,7 +38,7 @@ extension FileManager: FileManagerProtocol {
         for filename: String
     ) throws -> URL {
         guard let documentURL = url(directory: .documentDirectory) else { throw Error.invaliDirectoryURL }
-        return documentURL.appendingPathComponent("\(filename)")
+        return documentURL.appendingPathComponent("flickr").appendingPathComponent("\(filename)")
     }
 
     public func saveJPG(
@@ -44,7 +47,11 @@ extension FileManager: FileManagerProtocol {
     ) throws {
         guard let directoryURL = url(directory: .documentDirectory) else { throw Error.invaliDirectoryURL }
         guard let data = image.jpegData(compressionQuality: 0.8) else { throw Error.failedJpegData }
-        let fileURL = directoryURL.appendingPathComponent("\(filename)")
+        let flickrURL = directoryURL.appendingPathComponent("flickr")
+        if !fileExists(atPath: flickrURL.path) {
+            try createDirectory(atPath: flickrURL.path, withIntermediateDirectories: true, attributes: nil)
+        }
+        let fileURL = flickrURL.appendingPathComponent("\(filename)")
         try data.write(to: fileURL)
     }
 
@@ -55,5 +62,15 @@ extension FileManager: FileManagerProtocol {
         guard let data = contents(atPath: url.path) else { throw Error.failedToLoadData }
         guard let image = UIImage(data: data) else { throw Error.invalidImageData }
         return image
+    }
+
+    public func clearAllImages() throws {
+        guard let directoryURL = url(directory: .documentDirectory) else { throw Error.invaliDirectoryURL }
+        let flickrDir = directoryURL.appendingPathComponent("flickr")
+        let contents = try contentsOfDirectory(atPath: flickrDir.path)
+        for path in contents {
+            let fileURL = flickrDir.appendingPathComponent(path)
+            try removeItem(at: fileURL)
+        }
     }
 }
